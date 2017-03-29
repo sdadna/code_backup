@@ -1,5 +1,12 @@
 #!/bin/bash
-
+#Date:2017/3/29
+#Author:sdadna
+#description:batch rename file
+#
+#./rename.sh <path> <name>
+#eg.
+#./rename.sh . mp4
+#
 function recurse_file(){
 	if [ $# -eq 2 ];then
 		for file in `ls $1`

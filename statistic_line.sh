@@ -1,28 +1,51 @@
 #!/bin/bash
-#Description:statistic file and total lines
-#./static_line.sh <path> <extention>
+#Description:statistic total file and total lines in one path
+#./static_line.sh <path>
 #eg.
-#./static_line.sh . sh
+#./static_line.sh . 
 #Date:2017/3/29
 #Author:sdadna
 
-TARGET_PATH=$1
-EXTEND=$2
 
-if [ "$TARGET_PATH" == "" ];then
-	echo "path no exist"
-	exit 1
-fi
+EXTEND_ARRAY=(c h sh java go cpp py)
 
-if [ "$EXTEND" == "" ];then
-	exit "extend name is NULL"
-	exit 1
-fi
+SUM_LINE=0
+SUM_FILE=0
+#TARGET_PATH=$1
 
-LINE_COUNT=`find $TARGET_PATH -name "*.$EXTEND"|xargs cat|wc -l`
-FILE_COUNT=`find $TARGET_PATH -name "*.$EXTEND"|wc -l`
+function statistic () {
 
+	if [ "$1" == "" ];then
+		echo "path no exist"
+		exit 1
+	fi
 
-echo "$EXTEND file count: $FILE_COUNT"
-echo "$EXTEND file line count:$LINE_COUNT"
+	if [ "$2" == "" ];then
+		exit "extend name is NULL"
+		exit 1
+	fi
+
+	FILE_COUNT=`find $1 -name "*.$2"|wc -l`
+	LINE_COUNT=`find $1 -name "*.$2"|xargs cat|wc -l`
+
+	if [ $FILE_COUNT -gt 0 ];then
+		echo "$2 file count: $FILE_COUNT file"
+		echo "$2 file line count:$LINE_COUNT line"
+
+		SUM_FILE=`expr $SUM_FILE + $FILE_COUNT`
+		SUM_LINE=`expr $SUM_LINE + $LINE_COUNT`
+	fi
+
+}
+
+function main() {
+	for extend in ${EXTEND_ARRAY[*]};do
+		statistic $1 $extend
+	done
+
+	echo "sum file:$SUM_FILE"
+	echo "sum line:$SUM_LINE"
+}
+
+main $1
 
